@@ -66,6 +66,7 @@ class Tetromino {
         }
         return false;
     }
+
     vector<vector<bool>> shape;
     int x;
     int y;
