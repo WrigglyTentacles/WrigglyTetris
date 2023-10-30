@@ -90,7 +90,11 @@ class Shape {
 
 class Tetromino {
   public:
-    Tetromino(char c) { this->shape = Shape(c); }
+    Tetromino(char c, int spawnx, int spawny) { 
+		this->x = spawnx;
+		this->y = spawny;
+		this->shape = Shape(c); 
+	}
 
     void MoveDown() { x++; }
 
@@ -161,7 +165,7 @@ void GameLoop() {
     Board board(windowX, windowY);
 
     // Create a new Tetromino
-	Tetromino tetromino('L');
+	Tetromino tetromino('L', 1,4);
 
     // Start the game loop
     while (true) {
@@ -245,7 +249,7 @@ void GameLoop() {
 
             // Create a new Tetromino
             tetromino =
-                Tetromino('L');
+                Tetromino('L', 1, 4);
         }
 
         // Refresh the window
