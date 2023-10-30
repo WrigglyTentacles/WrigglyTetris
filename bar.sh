@@ -1,2 +1,2 @@
 #!/bin/bash
-meson compile -C build && ./build/tetrisclone
+meson compile -C build > build.log && ./build/tetrisclone

@@ -102,13 +102,29 @@ class Tetromino {
         // TODO: Implement Tetromino rotation
 		// should rotate current shape 90 deg clockwise
     }
-
-
+	
+	bool IsCollidingWithBoard(Board& board){
+		auto blockVector = this->shape.getBlockLocation();
+		for(auto [blockx,blocky]:blockVector){
+			if(board.IsBlockFilled(blockx, blocky+1)){
+				return true;
+			}
+		}
+		return false;
+	}
 	bool IsOnBoard(Board& board){
 		if(shape.getTopBlock()<board.start_height && shape.getBottomBlock()<board.height){
 			return true;
 		}
 		return false;
+	}
+	void SetOnBoard(Board& board, pair<int,int> currentPivot){
+		for(auto xyVec:shape.getBlockLocation()){
+			board.SetBlock(currentPivot.first + xyVec.first, currentPivot.second+xyVec.second, true);
+		}
+	}
+	pair<int,int> GetXY(){
+		return pair<int,int>{this->x,this->y};
 	}
 
     /*
@@ -156,14 +172,10 @@ void GameLoop() {
         wrefresh(window);
         box(nextblock, 0, 0);
         mvwprintw(nextblock, 0, 9, "Block List");
-		auto [tetrominox,tetrominoy] = tetromino.shape.pivot;
-        string currTetrominoLocation = "Current X: " + to_string(tetrominox) +
-                                       " Y: " + to_string(tetrominoy) + "";
+		auto [tetrominox,tetrominoy] = tetromino.GetXY();
+        string currTetrominoLocation = "Current X: " + to_string(tetrominox) +" Y: " + to_string(tetrominoy) + "";
         mvwprintw(nextblock, 1, 5, currTetrominoLocation.c_str());
-        mvwprintw(
-            nextblock, 2, 5,
-            ("Tet: " + to_string(board.IsBlockFilled(tetrominox, tetrominoy)))
-                .c_str());
+        mvwprintw(nextblock, 2, 5,("Tet: " + to_string(board.IsBlockFilled(tetrominox, tetrominoy))).c_str());
         touchwin(nextblock);
         wrefresh(nextblock);
         box(highscore, 0, 0);
@@ -179,9 +191,7 @@ void GameLoop() {
                 } else {
                     board.SetBlock(tetrominox, tetrominoy, false);
                 }
-
-                if (board.IsBlockFilled(x,
-                                        y)) { // If the tetromino is currently
+                if (board.IsBlockFilled(x,y)) { 
                     mvwprintw(window, x, y, "#");
                 } else {
                     mvwprintw(window, x, y, " ");
@@ -219,16 +229,12 @@ void GameLoop() {
         }
 
         // Check if the Tetromino is colliding with the game board
-        if (tetromino.IsCollidingWith(board)) {
+        if (tetromino.IsCollidingWithBoard(board)) {
             // If the Tetromino is colliding, it has landed.
             // Add the Tetromino blocks to the game board.
-            for (unsigned int y = 0; y < tetromino.shape.size(); y++) {
-                for (unsigned int x = 0; x < tetromino.shape[0].size(); x++) {
-                    if (tetromino.shape[y][x]) {
-                        board.SetBlock(x + tetrominox, y + tetrominoy, true);
-                    }
-                }
-            }
+			//
+
+			tetromino.SetOnBoard(board, tetromino.GetXY());
 
             // Check for completed lines
             for (int y = 0; y < board.height; y++) {
