@@ -34,15 +34,63 @@ class Board {
         }
         return true;
     }
+	int start_width;
     int width;
+	int start_height;
     int height;
 
     vector<vector<bool>> blocks;
 };
 
+// Tetromino shape definitions
+class Shape {
+  public:
+    pair<int, int> pivot = {0, 0};
+    Shape(char predefinedShape) {
+        switch (predefinedShape) {
+        case 'L':
+
+            this->blocks_used = {{0, 1}, {0, 2}, {0, 3}, {1, 0}, {2, 0}};
+            break;
+        }
+    };
+    vector<pair<int, int>> getBlockLocation(void) { return blocks_used; }
+    int getTopBlock(void) { 
+		int largestY = pivot.second;
+		for(auto i:this->blocks_used){
+			largestY=(i.second>largestY)?i.second:largestY;
+		}
+		return largestY; 
+	}
+    int getBottomBlock(void) { 
+		int smallestY = pivot.second;
+		for(auto i:this->blocks_used){
+			smallestY=(i.second<smallestY)?i.second:smallestY;
+		}
+		return smallestY; 
+	}
+    int getRightBlock(void) { 
+		int largestX = pivot.first;
+		for(auto i:this->blocks_used){
+			largestX=(i.first>largestX)?i.first:largestX;
+		}
+		return largestX; 
+	}
+    int getLeftBlock(void) { 
+		int smallestX = pivot.first;
+		for(auto i:this->blocks_used){
+			smallestX=(i.first<smallestX)?i.first:smallestX;
+		}
+		return smallestX; 
+	}
+
+  private:
+    vector<pair<int, int>> blocks_used;
+};
+
 class Tetromino {
   public:
-    Tetromino(const vector<vector<bool>> &shape) { this->shape = shape; }
+    Tetromino(char c) { this->shape = Shape(c); }
 
     void MoveDown() { x++; }
 
@@ -52,22 +100,30 @@ class Tetromino {
 
     void Rotate() {
         // TODO: Implement Tetromino rotation
+		// should rotate current shape 90 deg clockwise
     }
 
-    bool IsCollidingWith(Board &board) {
-        unsigned int tx = this->x, ty = this->y;
 
-        for (unsigned int y = 0; y < shape.size(); y++) {
-            for (unsigned int x = 0; x < shape[0].size(); x++) {
-                if (shape[y][x] && board.IsBlockFilled(x + tx, y + ty)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	bool IsOnBoard(Board& board){
+		if(shape.getTopBlock()<board.start_height && shape.getBottomBlock()<board.height){
+			return true;
+		}
+		return false;
+	}
 
-    vector<vector<bool>> shape;
+    /*
+     * A shape should be defined as the blocks relative to it's pivot point
+     * therefore.
+     * pair<int,int>xy pivot_point;
+     * should be private and should only be allowed to be set using an interface
+     * vector<pair<int,int>> blocks_aroundPivotPoint;//
+     *
+     *
+     */
+    //vector<vector<bool>> shape;
+	Shape shape = Shape('L');
+	int rotation;
+private:
     int x;
     int y;
 };
@@ -89,9 +145,7 @@ void GameLoop() {
     Board board(windowX, windowY);
 
     // Create a new Tetromino
-    Tetromino tetromino(vector<vector<bool>>{{true, true}, {true, false}});
-    tetromino.y = 0 + 25;
-    tetromino.x = 0 + 2;
+	Tetromino tetromino('L');
 
     // Start the game loop
     while (true) {
@@ -102,16 +156,14 @@ void GameLoop() {
         wrefresh(window);
         box(nextblock, 0, 0);
         mvwprintw(nextblock, 0, 9, "Block List");
-        string currTetrominoLocation = "Current X: " + to_string(tetromino.x) +
-                                       " Y: " + to_string(tetromino.y) + "";
+		auto [tetrominox,tetrominoy] = tetromino.shape.pivot;
+        string currTetrominoLocation = "Current X: " + to_string(tetrominox) +
+                                       " Y: " + to_string(tetrominoy) + "";
         mvwprintw(nextblock, 1, 5, currTetrominoLocation.c_str());
         mvwprintw(
             nextblock, 2, 5,
-            ("Tet: " + to_string(board.IsBlockFilled(tetromino.x, tetromino.y)))
+            ("Tet: " + to_string(board.IsBlockFilled(tetrominox, tetrominoy)))
                 .c_str());
-        mvwprintw(nextblock, 3, 5,
-                  ("Colliding: " + to_string(tetromino.IsCollidingWith(board)))
-                      .c_str());
         touchwin(nextblock);
         wrefresh(nextblock);
         box(highscore, 0, 0);
@@ -122,13 +174,14 @@ void GameLoop() {
         //  Render the game board to the window
         for (int y = 1; y < board.height; y++) {
             for (int x = 1; x < board.width; x++) {
-				if(tetromino.x==x&&tetromino.y==y){
-					board.SetBlock(tetromino.x,tetromino.y, true);
-				}else {
-					board.SetBlock(tetromino.x,tetromino.y, false);
+                if (tetrominox == x && tetrominoy == y) {
+                    board.SetBlock(tetrominox, tetrominoy, true);
+                } else {
+                    board.SetBlock(tetrominox, tetrominoy, false);
                 }
 
-                if (board.IsBlockFilled( x, y)) {// If the tetromino is currently
+                if (board.IsBlockFilled(x,
+                                        y)) { // If the tetromino is currently
                     mvwprintw(window, x, y, "#");
                 } else {
                     mvwprintw(window, x, y, " ");
@@ -143,17 +196,17 @@ void GameLoop() {
         // Update the game state based on user input
         switch (ch) {
         case 'h':
-            if (tetromino.y > 1) {
+            if (tetrominoy > 1) {
                 tetromino.MoveLeft();
             }
             break;
         case 'l':
-            if (tetromino.y < windowY-2) {
+            if (tetrominoy < windowY - 2) {
                 tetromino.MoveRight();
             }
             break;
         case 'j':
-            if (tetromino.x < windowX) {
+            if (tetrominox < windowX) {
                 tetromino.MoveDown();
             }
             break;
@@ -172,7 +225,7 @@ void GameLoop() {
             for (unsigned int y = 0; y < tetromino.shape.size(); y++) {
                 for (unsigned int x = 0; x < tetromino.shape[0].size(); x++) {
                     if (tetromino.shape[y][x]) {
-                        board.SetBlock(x + tetromino.x, y + tetromino.y, true);
+                        board.SetBlock(x + tetrominox, y + tetrominoy, true);
                     }
                 }
             }
@@ -186,7 +239,7 @@ void GameLoop() {
 
             // Create a new Tetromino
             tetromino =
-                Tetromino(vector<vector<bool>>{{true, true}, {true, false}});
+                Tetromino('L');
         }
 
         // Refresh the window
