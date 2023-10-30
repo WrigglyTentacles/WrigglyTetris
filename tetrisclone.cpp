@@ -34,9 +34,9 @@ class Board {
         }
         return true;
     }
-	int start_width;
+    int start_width;
     int width;
-	int start_height;
+    int start_height;
     int height;
 
     vector<vector<bool>> blocks;
@@ -50,39 +50,40 @@ class Shape {
         switch (predefinedShape) {
         case 'L':
 
-            this->blocks_used = {{0, 1}, {0, 2}, {0, 3}, {1, 0}, {2, 0}};
+            this->blocks_used = {{0, 1},  {0, 2},  {-1, 0},
+                                 {-2, 0}, {-3, 0}, pivot};
             break;
         }
     };
     vector<pair<int, int>> getBlockLocation(void) { return blocks_used; }
-    int getTopBlock(void) { 
-		int largestY = pivot.second;
-		for(auto i:this->blocks_used){
-			largestY=(i.second>largestY)?i.second:largestY;
-		}
-		return largestY; 
-	}
-    int getBottomBlock(void) { 
-		int smallestY = pivot.second;
-		for(auto i:this->blocks_used){
-			smallestY=(i.second<smallestY)?i.second:smallestY;
-		}
-		return smallestY; 
-	}
-    int getRightBlock(void) { 
-		int largestX = pivot.first;
-		for(auto i:this->blocks_used){
-			largestX=(i.first>largestX)?i.first:largestX;
-		}
-		return largestX; 
-	}
-    int getLeftBlock(void) { 
-		int smallestX = pivot.first;
-		for(auto i:this->blocks_used){
-			smallestX=(i.first<smallestX)?i.first:smallestX;
-		}
-		return smallestX; 
-	}
+    int getTopBlock(void) {
+        int largestX = pivot.first;
+        for (auto i : this->blocks_used) {
+            largestX = (i.first > largestX) ? i.first : largestX;
+        }
+        return largestX;
+    }
+    int getBottomBlock(void) {
+        int smallestX = pivot.first;
+        for (auto i : this->blocks_used) {
+            smallestX = (i.first < smallestX) ? i.first : smallestX;
+        }
+        return smallestX;
+    }
+    int getRightBlock(void) {
+        int largestY = pivot.second;
+        for (auto i : this->blocks_used) {
+            largestY = (i.second > largestY) ? i.second : largestY;
+        }
+        return largestY;
+    }
+    int getLeftBlock(void) {
+        int smallestY = pivot.second;
+        for (auto i : this->blocks_used) {
+            smallestY = (i.second < smallestY) ? i.second : smallestY;
+        }
+        return smallestY;
+    }
 
   private:
     vector<pair<int, int>> blocks_used;
@@ -90,11 +91,11 @@ class Shape {
 
 class Tetromino {
   public:
-    Tetromino(char c, int spawnx, int spawny) { 
-		this->x = spawnx;
-		this->y = spawny;
-		this->shape = Shape(c); 
-	}
+    Tetromino(char c, int spawnx, int spawny) {
+        this->x = spawnx;
+        this->y = spawny;
+        this->shape = Shape(c);
+    }
 
     void MoveDown() { x++; }
 
@@ -104,32 +105,44 @@ class Tetromino {
 
     void Rotate() {
         // TODO: Implement Tetromino rotation
-		// should rotate current shape 90 deg clockwise
+        // should rotate current shape 90 deg clockwise
     }
-	
-	bool IsCollidingWithBoard(Board& board){
-		auto blockVector = this->shape.getBlockLocation();
-		for(auto [blockx,blocky]:blockVector){
-			if(board.IsBlockFilled(blockx, blocky+1)){
-				return true;
-			}
-		}
-		return false;
+	int GetRightBoundary(){
+		return this->y+this->shape.getRightBlock();
 	}
-	bool IsOnBoard(Board& board){
-		if(shape.getTopBlock()<board.start_height && shape.getBottomBlock()<board.height){
-			return true;
-		}
-		return false;
-	}
-	void SetOnBoard(Board& board, pair<int,int> currentPivot){
-		for(auto xyVec:shape.getBlockLocation()){
-			board.SetBlock(currentPivot.first + xyVec.first, currentPivot.second+xyVec.second, true);
-		}
-	}
-	pair<int,int> GetXY(){
-		return pair<int,int>{this->x,this->y};
-	}
+
+    bool IsCollidingWithBoard(Board &board) {
+        auto blockVector = this->shape.getBlockLocation();
+        for (auto [blockx, blocky] : blockVector) {
+            if (board.IsBlockFilled(this->x + blockx+1, this->y + blocky) ||
+                this->x + blockx == board.width - 1) {
+                return true;
+                // return false;
+            }
+        }
+        return false;
+    }
+    bool IsOnBoard(Board &board) {
+        if (shape.getTopBlock() < board.start_height &&
+            shape.getBottomBlock() < board.height) {
+            return true;
+        }
+        return false;
+    }
+    void Show(const char *c, WINDOW *window) {
+        for (auto xyVec : shape.getBlockLocation()) {
+            // board.SetBlock(this->x + xyVec.first, this->y+xyVec.second,
+            // true);
+            mvwprintw(window, this->x + xyVec.first, this->y + xyVec.second, c);
+        }
+    }
+    void SetOnBoard(Board &board, pair<int, int> currentPivot) {
+        for (auto xyVec : shape.getBlockLocation()) {
+            board.SetBlock(currentPivot.first + xyVec.first,
+                           currentPivot.second + xyVec.second, true);
+        }
+    }
+    pair<int, int> GetXY() { return pair<int, int>{this->x, this->y}; }
 
     /*
      * A shape should be defined as the blocks relative to it's pivot point
@@ -140,10 +153,11 @@ class Tetromino {
      *
      *
      */
-    //vector<vector<bool>> shape;
-	Shape shape = Shape('L');
-	int rotation;
-private:
+    // vector<vector<bool>> shape;
+    Shape shape = Shape('L');
+    int rotation;
+
+  private:
     int x;
     int y;
 };
@@ -152,6 +166,17 @@ private:
 void GameLoop() {
     // Initialize ncurses
     initscr();
+
+    // Start up colors
+    if (has_colors() == false) {
+        endwin();
+        printf("Your Terminal doesn't support colors scrub\n");
+        exit(0);
+    }
+    start_color();
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_CYAN, COLOR_BLACK);
+
     int windowX = 33, windowY = 100;
 
     // Create a new window for the game board
@@ -165,7 +190,10 @@ void GameLoop() {
     Board board(windowX, windowY);
 
     // Create a new Tetromino
-	Tetromino tetromino('L', 1,4);
+    Tetromino tetromino('L', 1, 5);
+    noecho();
+    curs_set(0);
+    refresh();
 
     // Start the game loop
     while (true) {
@@ -176,10 +204,19 @@ void GameLoop() {
         wrefresh(window);
         box(nextblock, 0, 0);
         mvwprintw(nextblock, 0, 9, "Block List");
-		auto [tetrominox,tetrominoy] = tetromino.GetXY();
-        string currTetrominoLocation = "Current X: " + to_string(tetrominox) +" Y: " + to_string(tetrominoy) + "";
+        auto [tetrominox, tetrominoy] = tetromino.GetXY();
+        string currRightBound = "RightBoundary: " + to_string(tetromino.GetRightBoundary());
+        string currTetrominoLocation = "Current X: " + to_string(tetrominox) +
+                                       " Y: " + to_string(tetrominoy) + "";
+        string currBoardDims = "Height: " + to_string(board.width) +
+                               " Width: " + to_string(board.height) + "";
         mvwprintw(nextblock, 1, 5, currTetrominoLocation.c_str());
-        mvwprintw(nextblock, 2, 5,("Tet: " + to_string(board.IsBlockFilled(tetrominox, tetrominoy))).c_str());
+        mvwprintw(nextblock, 2, 5, currBoardDims.c_str());
+        mvwprintw(
+            nextblock, 3, 5,
+            ("Tet: " + to_string(board.IsBlockFilled(tetrominox, tetrominoy)))
+                .c_str());
+        mvwprintw(nextblock, 4, 5, currRightBound.c_str());
         touchwin(nextblock);
         wrefresh(nextblock);
         box(highscore, 0, 0);
@@ -188,39 +225,42 @@ void GameLoop() {
         wrefresh(highscore);
         // ###################################-Screen-###############################
         //  Render the game board to the window
+		wattron(window, COLOR_PAIR(2));
         for (int y = 1; y < board.height; y++) {
             for (int x = 1; x < board.width; x++) {
-                if (tetrominox == x && tetrominoy == y) {
-                    board.SetBlock(tetrominox, tetrominoy, true);
-                } else {
-                    board.SetBlock(tetrominox, tetrominoy, false);
-                }
-                if (board.IsBlockFilled(x,y)) { 
+                if (board.IsBlockFilled(x, y)) {
                     mvwprintw(window, x, y, "#");
                 } else {
                     mvwprintw(window, x, y, " ");
                 }
             }
         }
+		wattroff(window, COLOR_PAIR(2));
+        // Render the Tetromino
+        wattron(window, COLOR_PAIR(1));
+        tetromino.Show("*", window);
+        wattroff(window, COLOR_PAIR(1));
         wrefresh(window);
 
         // Handle user input
+        // int ch = 'j';
+        refresh();
         int ch = getch();
 
         // Update the game state based on user input
         switch (ch) {
         case 'h':
-            if (tetrominoy > 1) {
+            if (tetrominoy > 1 && !board.IsBlockFilled(tetrominox, tetrominoy-1)) {
                 tetromino.MoveLeft();
             }
             break;
         case 'l':
-            if (tetrominoy < windowY - 2) {
+            if (tetromino.GetRightBoundary() < windowY - 2 && !board.IsBlockFilled(tetrominox, tetrominoy-1)) {
                 tetromino.MoveRight();
             }
             break;
         case 'j':
-            if (tetrominox < windowX) {
+            if (tetrominox < windowX - 1) {
                 tetromino.MoveDown();
             }
             break;
@@ -236,9 +276,8 @@ void GameLoop() {
         if (tetromino.IsCollidingWithBoard(board)) {
             // If the Tetromino is colliding, it has landed.
             // Add the Tetromino blocks to the game board.
-			//
 
-			tetromino.SetOnBoard(board, tetromino.GetXY());
+            tetromino.SetOnBoard(board, tetromino.GetXY());
 
             // Check for completed lines
             for (int y = 0; y < board.height; y++) {
@@ -248,15 +287,14 @@ void GameLoop() {
             }
 
             // Create a new Tetromino
-            tetromino =
-                Tetromino('L', 1, 4);
+            tetromino = Tetromino('L', 1, 5);
         }
 
         // Refresh the window
         refresh();
 
         // Wait for a short period of time before the next frame
-        usleep(10000);
+        usleep(500);
     }
 }
 
