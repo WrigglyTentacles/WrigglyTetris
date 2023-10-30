@@ -190,7 +190,7 @@ void GameLoop() {
     Board board(windowX, windowY);
 
     // Create a new Tetromino
-    Tetromino tetromino('L', 1, 5);
+    Tetromino tetromino('L', 4, 50);
     noecho();
     curs_set(0);
     refresh();
@@ -255,7 +255,7 @@ void GameLoop() {
             }
             break;
         case 'l':
-            if (tetromino.GetRightBoundary() < windowY - 2 && !board.IsBlockFilled(tetrominox, tetrominoy-1)) {
+            if (tetromino.GetRightBoundary() < windowY - 2 && !board.IsBlockFilled(tetrominox, tetromino.GetRightBoundary()+1)) {
                 tetromino.MoveRight();
             }
             break;
@@ -287,7 +287,7 @@ void GameLoop() {
             }
 
             // Create a new Tetromino
-            tetromino = Tetromino('L', 1, 5);
+            tetromino = Tetromino('L', 4, 50);
         }
 
         // Refresh the window
