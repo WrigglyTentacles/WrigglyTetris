@@ -37,7 +37,7 @@ class Board {
 
     void ClearLine(int line) {
         for (int x = 1; x <= width; x++) {
-            //blocks[line][x] = (!blocks[line][x])?true:blocks[line][x];
+            // blocks[line][x] = (!blocks[line][x])?true:blocks[line][x];
             blocks[line][x] = false;
         }
     }
@@ -72,6 +72,15 @@ class Shape {
             break;
         }
     };
+    void rotateShape() {
+        vector<pair<int, int>> nXY;
+        for (auto [xx, yy] : blocks_used) {
+			yy = yy * (-1);
+            swap(xx, yy);
+            nXY.push_back({xx, yy});
+        }
+        this->blocks_used = nXY;
+    }
     vector<pair<int, int>> getBlockLocation(void) { return blocks_used; }
     int getTopBlock(void) {
         int smallestY = pivot.second;
@@ -122,9 +131,10 @@ class Tetromino {
 
     void Rotate() {
         // TODO: Implement Tetromino rotation
-        // should rotate current shape 90 deg clockwise
+        shape.rotateShape();
     }
     int GetRightBoundary() { return this->x + this->shape.getRightBlock(); }
+    int GetLeftBoundary() { return this->x + this->shape.getLeftBlock(); }
 
     bool IsCollidingWithBoard(Board &board) {
         auto blockVector = this->shape.getBlockLocation();
@@ -195,7 +205,7 @@ void GameLoop() {
     init_pair(2, COLOR_CYAN, COLOR_BLACK);
 
     // int windowX = 33, windowX = 100;
-    int windowY = 34, windowX = 4;
+    int windowY = 34, windowX = 10;
 
     // Create a new window for the game board
     WINDOW *window = newwin(windowY + 1, windowX + 1, 0, 0);
@@ -268,8 +278,9 @@ void GameLoop() {
         // Update the game state based on user input
         switch (ch) {
         case 'h':
-            if (tetrominoy > 1 &&
-                !board.IsBlockFilled(tetrominox - 1, tetrominoy)) {
+            if (tetromino.GetLeftBoundary() > 1 &&
+                !board.IsBlockFilled(tetromino.GetLeftBoundary() - 1,
+                                     tetrominoy)) {
                 tetromino.MoveLeft();
             }
             break;
