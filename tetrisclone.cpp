@@ -36,18 +36,18 @@ class Board {
     }
 
     void ClearLine(int line) {
-        for (int x = 1; x < width; x++) {
+        for (int x = 1; x <= width; x++) {
+            //blocks[line][x] = (!blocks[line][x])?true:blocks[line][x];
             blocks[line][x] = false;
         }
     }
 
     bool IsLineCompleted(int line) {
-        for (int x = 1; x < this->width - 1; x++) {
+        for (int x = 1; x < this->width; x++) {
             if (!this->blocks[line][x]) {
                 return false;
             }
         }
-        this->highScore++;
         return true;
     }
     int start_height = 1;
@@ -130,7 +130,7 @@ class Tetromino {
         auto blockVector = this->shape.getBlockLocation();
         for (auto [blockx, blocky] : blockVector) {
             if (this->y + blocky == board.height - 1 ||
-                board.IsBlockFilled(this->x + blockx, this->y + blocky+1)) {
+                board.IsBlockFilled(this->x + blockx, this->y + blocky + 1)) {
                 return true;
             }
         }
@@ -195,7 +195,7 @@ void GameLoop() {
     init_pair(2, COLOR_CYAN, COLOR_BLACK);
 
     // int windowX = 33, windowX = 100;
-    int windowY = 34, windowX = 20;
+    int windowY = 34, windowX = 4;
 
     // Create a new window for the game board
     WINDOW *window = newwin(windowY + 1, windowX + 1, 0, 0);
@@ -210,7 +210,7 @@ void GameLoop() {
 
     // Create a new Tetromino
     // Tetromino tetromino('L', 4, windowX / 2);
-    Tetromino tetromino('L', windowX/2, 4);
+    Tetromino tetromino('L', windowX / 2, 4);
 
     box(window, 0, 0);
     box(nextblock, 0, 0);
@@ -269,7 +269,7 @@ void GameLoop() {
         switch (ch) {
         case 'h':
             if (tetrominoy > 1 &&
-                !board.IsBlockFilled(tetrominox-1, tetrominoy)) {
+                !board.IsBlockFilled(tetrominox - 1, tetrominoy)) {
                 tetromino.MoveLeft();
             }
             break;
@@ -304,18 +304,16 @@ void GameLoop() {
 
             tetromino.SetOnBoard(board, tetromino.GetXY());
 
-            /*
-// Check for completed lines
-for (int line = 1; line < board.height; line++) {
-if (board.IsLineCompleted(line)) {
-            board.highScore++;
-board.ClearLine(line);
-}
-}
-       */
+            // Check for completed lines
+            for (int line = 1; line < board.height; line++) {
+                if (board.IsLineCompleted(line)) {
+                    board.ClearLine(line);
+                    board.highScore++;
+                }
+            }
 
             // Create a new Tetromino
-            tetromino = Tetromino('L', windowX/2, 4);
+            tetromino = Tetromino('L', windowX / 2, 4);
         }
 
         // Wait for a short period of time before the next frame
