@@ -1,0 +1,5 @@
+ninja: Entering directory `/home/rvenecia/gitrepos/wrigglytetris/build'
+[1/2] Compiling C++ object tetrisclone.p/tetrisclone.cpp.o
+[2/2] Linking target tetrisclone
+INFO: autodetecting backend as ninja
+INFO: calculating backend command to run: /usr/bin/ninja -C /home/rvenecia/gitrepos/wrigglytetris/build

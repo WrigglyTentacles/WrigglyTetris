@@ -48,7 +48,7 @@ void GameLoop() {
 
   // Create a new Tetromino
   // Tetromino tetromino('L', 4, windowX / 2);
-  Tetromino tetromino('L', windowX / 2, 4);
+  Tetromino tetromino(windowX / 2, 4);
 
   box(window, 0, 0);
   box(nextblock, 0, 0);
@@ -150,7 +150,7 @@ void GameLoop() {
       }
 
       // Create a new Tetromino
-      tetromino = Tetromino('L', windowX / 2, 4);
+      tetromino = Tetromino(windowX / 2, 4);
     }
 
     // Wait for a short period of time before the next frame
