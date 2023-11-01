@@ -35,6 +35,9 @@ sudo apt-get install libncurses5-dev
 - [x] Block Rotation
 - [x] Clear Line and Score Points
 - [x] Collision with Near blocks and Game board
+- [ ] Add more blocks
+- [ ] Spawn Blocks at random
+- [ ] Attach colors to block classes
 - [ ] Move Screen update to seperate header file
 - [ ] Rotate Collision Checking
 - [ ] Game Menu
