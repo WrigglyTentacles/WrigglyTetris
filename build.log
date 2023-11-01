@@ -1,4 +1,0 @@
-ninja: Entering directory `/home/rvenecia/gitrepos/wrigglytetris/build'
-ninja: no work to do.
-INFO: autodetecting backend as ninja
-INFO: calculating backend command to run: /usr/bin/ninja -C /home/rvenecia/gitrepos/wrigglytetris/build
