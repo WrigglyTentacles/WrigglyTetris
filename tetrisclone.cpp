@@ -12,6 +12,25 @@ using namespace std;
 
 
 
+int ColorBlock(char c){
+	switch(c){
+		case 'L':
+			return 2;
+		case 'J':
+			return 3;
+		case 'S':
+			return 4;
+		case 'Z':
+			return 5;
+		case 'T':
+			return 6;
+		case 'O':
+			return 7;
+		case 'I':
+			return 7;
+	}
+	return 1;
+}
 
 // Main game function
 void GameLoop() {
@@ -29,8 +48,13 @@ void GameLoop() {
     exit(0);
   }
   start_color();
-  init_pair(1, COLOR_RED, COLOR_BLACK);
-  init_pair(2, COLOR_CYAN, COLOR_BLACK);
+  init_pair(1, COLOR_WHITE, COLOR_BLACK);
+  init_pair(2, COLOR_RED, COLOR_BLACK);
+  init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(4, COLOR_GREEN, COLOR_BLACK);
+  init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+  init_pair(6, COLOR_CYAN, COLOR_BLACK);
+  init_pair(7, COLOR_BLUE, COLOR_BLACK);
 
   // int windowX = 33, windowX = 100;
   int windowY = 33, windowX = 10;
@@ -48,7 +72,7 @@ void GameLoop() {
 
   // Create a new Tetromino
   // Tetromino tetromino('L', 4, windowX / 2);
-  Tetromino tetromino('L', windowX / 2, 4);
+  Tetromino tetromino(windowX / 2, 4);
 
   box(window, 0, 0);
   box(nextblock, 0, 0);
@@ -82,14 +106,14 @@ void GameLoop() {
               ("Score: " + to_string(board.highScore)).c_str());
     // ###################################-Screen-###############################
     //  Render the game board to the window
-    wattron(window, COLOR_PAIR(2));
+    wattron(window, COLOR_PAIR(1));
     board.DrawBoard(window);
-    wattroff(window, COLOR_PAIR(2));
+    wattroff(window, COLOR_PAIR(1));
     wrefresh(window);
     // Render the Tetromino
-    wattron(window, COLOR_PAIR(1));
+    wattron(window, COLOR_PAIR(ColorBlock(tetromino.shape.getType())));
     tetromino.Show("*", *window);
-    wattroff(window, COLOR_PAIR(1));
+    wattroff(window, COLOR_PAIR(ColorBlock(tetromino.shape.getType())));
     // wrefresh(window);
 
     // touchwin(window);
@@ -150,7 +174,7 @@ void GameLoop() {
       }
 
       // Create a new Tetromino
-      tetromino = Tetromino('L', windowX / 2, 4);
+      tetromino = Tetromino(windowX / 2, 4);
     }
 
     // Wait for a short period of time before the next frame
