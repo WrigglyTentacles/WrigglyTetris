@@ -4,7 +4,8 @@ project('tetrisClone', 'cpp',
 
 ncurses = dependency('ncurses')
 
-exe = executable('tetrisclone', 'tetrisclone.cpp', dependencies: ncurses,
+
+exe = executable('tetrisclone', 'tetrisclone.cpp','board.hpp','shape.hpp', dependencies: ncurses,
   install : true)
 
 test('basic', exe)
