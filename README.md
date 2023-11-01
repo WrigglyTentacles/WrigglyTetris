@@ -23,7 +23,10 @@ sudo apt-get install meson ninja-build
 ```sh
 sudo apt-get install libncurses5-dev
 ```
-
+## Allow Execution of setup and build scripts
+```sh
+chmod +x *.sh
+```
 ## Setup Script
 ```sh
 ./setup.sh
