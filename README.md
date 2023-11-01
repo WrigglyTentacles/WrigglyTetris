@@ -31,3 +31,12 @@ sudo apt-get install libncurses5-dev
 ```sh
 ./bar.sh
 ```
+### TODO
+- [x] Block Rotation
+- [x] Clear Line and Score Points
+- [x] Collision with Near blocks and Game board
+- [ ] Move Screen update to seperate header file
+- [ ] Rotate Collision Checking
+- [ ] Game Menu
+- [ ] Alternate Bindings
+- [ ] High Score Persistence
