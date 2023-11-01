@@ -139,8 +139,11 @@ class Tetromino {
     bool IsCollidingWithBoard(Board &board) {
         auto blockVector = this->shape.getBlockLocation();
         for (auto [blockx, blocky] : blockVector) {
-            if (this->y + blocky == board.height - 1 ||
-                board.IsBlockFilled(this->x + blockx, this->y + blocky + 1)) {
+			if(this->y + blocky == board.height-1){
+				this->y +=1;
+				return true;
+			}
+			else if (board.IsBlockFilled(this->x + blockx, this->y + blocky)) {
                 return true;
             }
         }
@@ -162,7 +165,7 @@ class Tetromino {
     void SetOnBoard(Board &board, pair<int, int> currentPivot) {
         for (auto xyVec : shape.getBlockLocation()) {
             board.SetBlock(currentPivot.first + xyVec.first,
-                           currentPivot.second + xyVec.second, true);
+                           currentPivot.second + xyVec.second-1, true);
         }
     }
     pair<int, int> GetXY() { return pair<int, int>{this->x, this->y}; }
@@ -205,7 +208,7 @@ void GameLoop() {
     init_pair(2, COLOR_CYAN, COLOR_BLACK);
 
     // int windowX = 33, windowX = 100;
-    int windowY = 34, windowX = 10;
+    int windowY = 33, windowX = 10;
 
     // Create a new window for the game board
     WINDOW *window = newwin(windowY + 1, windowX + 1, 0, 0);
