@@ -57,7 +57,7 @@ void GameLoop() {
   init_pair(7, COLOR_BLUE, COLOR_BLACK);
 
   // int windowX = 33, windowX = 100;
-  int windowY = 33, windowX = 10;
+  int windowY = 33, windowX = 5;
 
   // Create a new window for the game board
   WINDOW *window = newwin(windowY + 1, windowX + 1, 0, 0);
@@ -169,6 +169,7 @@ void GameLoop() {
       for (int line = 1; line < board.height; line++) {
         if (board.IsLineCompleted(line)) {
           board.ClearLine(line);
+			board.DropBlocks(line, window);
           board.highScore++;
         }
       }
