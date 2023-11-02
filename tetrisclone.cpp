@@ -149,6 +149,9 @@ void GameLoop() {
     case 'k':
       tetromino.Rotate();
       break;
+    case 'i':
+      tetromino.QuickDrop(board);
+      break;
     case 'q':
       delwin(window);
       delwin(highscore);
