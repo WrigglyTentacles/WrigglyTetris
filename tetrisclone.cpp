@@ -1,35 +1,33 @@
+#include "board.hpp"
+#include "shape.hpp"
+#include "tetromino.hpp"
 #include <curses.h>
 #include <ncurses.h>
 #include <string>
 #include <thread>
 #include <unistd.h>
 #include <vector>
-#include "board.hpp"
-#include "shape.hpp"
-#include "tetromino.hpp"
 
 using namespace std;
 
-
-
-int ColorBlock(char c){
-	switch(c){
-		case 'L':
-			return 2;
-		case 'J':
-			return 3;
-		case 'S':
-			return 4;
-		case 'Z':
-			return 5;
-		case 'T':
-			return 6;
-		case 'O':
-			return 7;
-		case 'I':
-			return 7;
-	}
-	return 1;
+int ColorBlock(char c) {
+  switch (c) {
+  case 'L':
+    return 2;
+  case 'J':
+    return 3;
+  case 'S':
+    return 4;
+  case 'Z':
+    return 5;
+  case 'T':
+    return 6;
+  case 'O':
+    return 7;
+  case 'I':
+    return 7;
+  }
+  return 1;
 }
 
 // Main game function
@@ -169,7 +167,8 @@ void GameLoop() {
       for (int line = 1; line < board.height; line++) {
         if (board.IsLineCompleted(line)) {
           board.ClearLine(line);
-			board.DropBlocks(line, window);
+          //board.DropBlocks(line, window);
+          board.ClearBlocks(line, window);
           board.highScore++;
         }
       }
