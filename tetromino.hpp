@@ -50,23 +50,40 @@ class Tetromino {
     void MoveRight() { x++; }
 
     void Rotate() {
-        // TODO: Implement Tetromino rotation
         if (shape.getType() != 'O') {
 
             shape.rotateShape();
         }
     }
+    void QuickDrop(Board& board) {
+		while(!this->IsGoingToCollideWithBoard(board)){
+			MoveDown();
+		}
+    }
     int GetRightBoundary() { return this->x + this->shape.getRightBlock(); }
     int GetLeftBoundary() { return this->x + this->shape.getLeftBlock(); }
 
+    bool IsGoingToCollideWithBoard(Board &board) {// Alternate version that is used for auto dropping. The original function moves y down a row that would put our collision out of bounds.
+        auto blockVector = this->shape.getBlockLocation();
+        for (auto [blockx, blocky] : blockVector) {//If The collision would be with the board
+            if (this->y + blocky == board.height - 1 &&
+                !board.IsBlockFilled(this->x + blockx, board.height - 1)) {
+                return true;
+            } else if (board.IsBlockFilled(this->x + blockx,//if the collision would be with another block
+                                           this->y + blocky)) {
+                return true;
+            }
+        }
+        return false;
+    }
     bool IsCollidingWithBoard(Board &board) {
         auto blockVector = this->shape.getBlockLocation();
-        for (auto [blockx, blocky] : blockVector) {
+        for (auto [blockx, blocky] : blockVector) {//If The collision would be with the board
             if (this->y + blocky == board.height - 1 &&
                 !board.IsBlockFilled(this->x + blockx, board.height - 1)) {
                 this->y += 1;
                 return true;
-            } else if (board.IsBlockFilled(this->x + blockx,
+            } else if (board.IsBlockFilled(this->x + blockx,//if the collision would be with another block
                                            this->y + blocky)) {
                 return true;
             }

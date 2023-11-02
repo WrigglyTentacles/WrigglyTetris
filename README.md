@@ -37,10 +37,13 @@ sudo apt-get install libncurses5-dev
 - [x] Collision with Near blocks and Game board
 - [x] Add more blocks
 - [x] Spawn Blocks at random
-- [x] Attach colors to block classes
 - [x] Drop Orphaned blocks once line has been completed
 - [x] Block Preview
-- [ ] Block Preview Block exchange
+- [x] Block Preview Block exchange
+- [x] Attach colors to block classes
+- [x] Set Block quick drop
+- [x] Block Preview Block exchange
+- [ ] Block Shadow where it will collide on quick drop
 - [ ] Move Screen update to seperate header file
 - [ ] Rotate Collision Checking
 - [ ] Game Menu
