@@ -80,6 +80,12 @@ class Tetromino {
         }
         return false;
     }
+    void UnShow(WINDOW &window) {
+        for (auto xyVec : shape.getBlockLocation()) {
+            mvwprintw(&window, this->y + xyVec.second, this->x + xyVec.first,
+                      " ");
+        }
+    }
     void Show(const char *c, WINDOW &window) {
         for (auto xyVec : shape.getBlockLocation()) {
             mvwprintw(&window, this->y + xyVec.second, this->x + xyVec.first,
