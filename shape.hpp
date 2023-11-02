@@ -79,9 +79,9 @@ class Shape {
         return smallestX;
     }
     vector<pair<int, int>> getBlockLocation(void) { return blocks_used; }
-	void setBlockLocation(vector<pair<int,int>> nBlocks){
-		this->blocks_used = nBlocks;
-	}
+    void setBlockLocation(vector<pair<int, int>> nBlocks) {
+        this->blocks_used = nBlocks;
+    }
 
   private:
     char type;
