@@ -128,50 +128,49 @@ void GameLoop() {
         wrefresh(nextblock);
         wrefresh(highscore);
         // Handle user input
-         //int ch = 'k';
+        // int ch = 'k';
         int ch = wgetch(window);
 
         // Update the game state based on user input
         switch (ch) {
-        case 'h'://move left one
+        case 'h': // move left one
             if (tetromino.GetLeftBoundary() > 1 &&
                 !board.IsBlockFilled(tetromino.GetLeftBoundary() - 1,
                                      tetrominoy)) {
                 tetromino.MoveLeft();
             }
             break;
-        case 'l'://Move right one
+        case 'l': // Move right one
             if (tetromino.GetRightBoundary() < windowX - 1 &&
-                !board.IsBlockFilled(tetromino.GetRightBoundary() + 1,
+                !board.IsBlockFilled(tetromino.GetRightBoundary(),
                                      tetrominoy)) {
                 tetromino.MoveRight();
             }
             break;
-        case 'j'://MoveDown one
+        case 'j': // MoveDown one
             if (tetrominox < windowY - 1) {
                 tetromino.MoveDown();
             }
             break;
-        case 'k'://Rotate
-			tetromino.RotateIfNoCollision(board);
+        case 'k': // Rotate
+            tetromino.RotateIfNoCollision(board);
             break;
-        case 'i'://QuickPlace
+        case 'i': // QuickPlace
             tetromino.QuickDrop(board);
             break;
-        case 'q'://Exit Game
+        case 'q': // Exit Game
             delwin(window);
             delwin(highscore);
             delwin(nextblock);
             endwin();
             return;
-            break;
-        case ' '://Swap with nextBlock
+        case ' ': // Swap with nextBlock
             tetromino.UnShow(*window);
             next_tetromino.UnShow(*highscore);
             Tetromino temp = tetromino;
             tetromino = next_tetromino;
             next_tetromino = temp;
-			tetromino.SetXY(temp.GetXY());
+            tetromino.SetXY(temp.GetXY());
             continue;
         }
 
@@ -185,8 +184,8 @@ void GameLoop() {
             for (int line = 1; line < board.height; line++) {
                 if (board.IsLineCompleted(line)) {
                     board.ClearLine(line);
-                    // board.DropBlocks(line, window);//WrigglyMode
-                    board.ClearBlocks(line, window);//TetrisMode
+                     //board.DropBlocks(line, window);//WrigglyMode
+                    board.ClearBlocks(line, window); // TetrisMode
                     board.highScore++;
                 }
             }
@@ -199,6 +198,13 @@ void GameLoop() {
             tetromino = next_tetromino;
             next_tetromino = Tetromino(windowX / 2, 4);
         }
+		if(board.IsGameOver(tetromino.GetXY())){
+            delwin(window);
+            delwin(highscore);
+            delwin(nextblock);
+            endwin();
+            return;
+		}
 
         // Wait for a short period of time before the next frame
         usleep(1000);

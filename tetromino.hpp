@@ -62,25 +62,26 @@ class Tetromino {
     int GetRightBoundary() { return this->x + this->shape.getRightBlock(); }
     int GetLeftBoundary() { return this->x + this->shape.getLeftBlock(); }
 
-	/*
-	* @Returns: Boolean
-	* @Takes: void
-	* @ExtraNotes: Should tell us whether a rotation will cause a collision with either the frame of the board or a currently placed block;
-	*/
-	bool RotateIfNoCollision(Board& board){
+    /*
+     * @Returns: Boolean
+     * @Takes: void
+     * @ExtraNotes: Should tell us whether a rotation will cause a collision
+     * with either the frame of the board or a currently placed block;
+     */
+    bool RotateIfNoCollision(Board &board) {
         if (shape.getType() == 'O') {
-			return false;
+            return false;
         }
-		auto oldBlockPosition = this->shape.getBlockLocation();
-		shape.rotateShape();
-		for(auto [bx,by] : shape.getBlockLocation()){
-			if(board.ExpensiveIsBlockFilled(this->x+bx, this->y+by)){
-				shape.setBlockLocation(oldBlockPosition);
-				return false;
-			}
-		}
-		return false;
-	}
+        auto oldBlockPosition = this->shape.getBlockLocation();
+        shape.rotateShape();
+        for (auto [bx, by] : shape.getBlockLocation()) {
+            if (board.ExpensiveIsBlockFilled(this->x + bx, this->y + by)) {
+                shape.setBlockLocation(oldBlockPosition);
+                return false;
+            }
+        }
+        return false;
+    }
 
     bool IsGoingToCollideWithBoard(
         Board &board) { // Alternate version that is used for auto dropping. The
@@ -109,10 +110,10 @@ class Tetromino {
                 !board.IsBlockFilled(this->x + blockx, board.height - 1)) {
                 this->y += 1;
                 return true;
-            } else if (board.IsBlockFilled(this->x +
-                                               blockx, // if the collision would
-                                                       // be with another block
-                                           this->y + blocky)) {
+            } else if (board.IsBlockFilled(
+                           this->x +
+                               blockx, // if the collision is with another block
+                           this->y + blocky)) {
                 return true;
             }
         }

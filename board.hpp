@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <vector>
 
-using std::vector;
+using std::vector, std::pair;
 
 // Class to represent the game board
 class Board {
@@ -26,9 +26,17 @@ class Board {
 
     void SetBlock(int x, int y, bool filled) { this->blocks[y][x] = filled; }
 
+    bool IsGameOver(pair<int,int> xy) { 
+		if(IsBlockFilled(xy.first, xy.second)){
+			return true;
+		}
+		return false;
+	}
+
     bool IsBlockFilled(int x, int y) { return blocks[y][x]; }
     bool ExpensiveIsBlockFilled(int x, int y) {
-        if (x < this->start_width || y < this->start_height || x > this->width || y > this->height)
+        if (x < this->start_width || y < this->start_height ||
+            x > this->width || y > this->height)
             return true;
         return blocks[y][x];
     }
