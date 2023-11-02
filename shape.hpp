@@ -38,7 +38,8 @@ class Shape {
             break;
         }
     };
-	int shapeCount = 7;// used for other classes to know the total number of diff shapes when calcing random shapes
+    int shapeCount = 7; // used for other classes to know the total number of
+                        // diff shapes when calcing random shapes
     char getType() { return this->type; }
     void rotateShape() {
         vector<pair<int, int>> nXY;
@@ -49,7 +50,6 @@ class Shape {
         }
         this->blocks_used = nXY;
     }
-    vector<pair<int, int>> getBlockLocation(void) { return blocks_used; }
     int getTopBlock(void) {
         int smallestY = pivot.second;
         for (auto i : this->blocks_used) {
@@ -78,6 +78,10 @@ class Shape {
         }
         return smallestX;
     }
+    vector<pair<int, int>> getBlockLocation(void) { return blocks_used; }
+	void setBlockLocation(vector<pair<int,int>> nBlocks){
+		this->blocks_used = nBlocks;
+	}
 
   private:
     char type;
