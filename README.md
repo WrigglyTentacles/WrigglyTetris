@@ -45,6 +45,7 @@ sudo apt-get install libncurses5-dev
 - [x] Block Preview Block exchange
 - [x] Rotation Collision Checking
 - [ ] Check For Game Over
+- [ ] Better Collision for moves similar to rotation check
 - [ ] Better Spawn point
 - [ ] Cleanup Right Side Bar areas
 - [ ] Block Shadow where it will collide on quick drop
