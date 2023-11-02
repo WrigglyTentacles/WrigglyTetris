@@ -43,6 +43,7 @@ sudo apt-get install libncurses5-dev
 - [x] Attach colors to block classes
 - [x] Set Block quick drop
 - [x] Block Preview Block exchange
+- [ ] Block Shadow where it will collide on quick drop
 - [ ] Move Screen update to seperate header file
 - [ ] Rotate Collision Checking
 - [ ] Game Menu
