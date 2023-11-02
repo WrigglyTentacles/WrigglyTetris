@@ -70,7 +70,8 @@ void GameLoop() {
 
   // Create a new Tetromino
   // Tetromino tetromino('L', 4, windowX / 2);
-  Tetromino tetromino(windowX / 2, 4);
+  Tetromino next_tetromino(3, 3);
+  Tetromino tetromino(windowX / 2, 3);
 
   box(window, 0, 0);
   box(nextblock, 0, 0);
@@ -112,6 +113,10 @@ void GameLoop() {
     wattron(window, COLOR_PAIR(ColorBlock(tetromino.shape.getType())));
     tetromino.Show("*", *window);
     wattroff(window, COLOR_PAIR(ColorBlock(tetromino.shape.getType())));
+
+    wattron(highscore, COLOR_PAIR(ColorBlock(next_tetromino.shape.getType())));
+    next_tetromino.Show("*", *highscore);
+    wattroff(highscore, COLOR_PAIR(ColorBlock(next_tetromino.shape.getType())));
     // wrefresh(window);
 
     // touchwin(window);
@@ -174,7 +179,12 @@ void GameLoop() {
       }
 
       // Create a new Tetromino
-      tetromino = Tetromino(windowX / 2, 4);
+
+		next_tetromino.UnShow(*highscore);
+		refresh();
+		wrefresh(highscore);
+		tetromino = next_tetromino;
+      next_tetromino = Tetromino(windowX / 2, 4);
     }
 
     // Wait for a short period of time before the next frame
