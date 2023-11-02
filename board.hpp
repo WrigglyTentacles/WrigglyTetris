@@ -1,6 +1,7 @@
 #pragma once
-#include <vector>
 #include <ncurses.h>
+#include <unistd.h>
+#include <vector>
 
 using std::vector;
 
@@ -31,6 +32,54 @@ public:
     refresh();
     wrefresh(window);
   }
+  /*
+   * @Returns: Void
+   * @Takes: Line
+   * @ExtraNotes: Moves all floating blocks above this line down until they
+   * reache the board.
+   */
+  void DropBlocks(int line, WINDOW *window) {
+    for (int col = line; col > 1; col--) { // Starting at the cleared line
+      for (int block = 0; block <= width;
+           block++) { // Look at each block in the line
+        if (col + 1 < height && blocks[col][block] &&
+            !blocks[col + 1][block]) { // if we can check the next column and
+                                       // the current block is filled but the
+                                       // block one column down isn't
+          int detachedCol = col;
+          while (detachedCol + 1 < height && blocks[detachedCol][block] &&
+                 !blocks[detachedCol + 1][block]) {
+            blocks[detachedCol + 1][block] = true;
+            blocks[detachedCol][block] = false;
+            detachedCol++;
+            usleep(100000);
+            DrawBoard(window);
+            refresh();
+            wrefresh(window);
+          }
+        }
+      }
+    }
+  }
+
+  void ClearBlocks(int line, WINDOW *window) {
+    for (int col = line; col > 1; col--) { // Starting at the cleared line
+      for (int block = 0; block <= width;
+           block++) { // Look at each block in the line
+        if (col + 1 < height && blocks[col][block] &&
+            !blocks[col + 1][block]) { // if we can check the next column and
+                                       // the current block is filled but the
+                                       // block one column down isn't
+            blocks[col + 1][block] = true;
+            blocks[col][block] = false;
+            usleep(100000);
+            DrawBoard(window);
+            refresh();
+            wrefresh(window);
+        }
+      }
+    }
+  }
 
   void ClearLine(int line) {
     for (int x = 1; x <= width; x++) {
@@ -40,7 +89,7 @@ public:
   }
 
   bool IsLineCompleted(int line) {
-    for (int x = 1; x < this->width; x++) {
+    for (int x = 1; x <= this->width; x++) {
       if (!this->blocks[line][x]) {
         return false;
       }
