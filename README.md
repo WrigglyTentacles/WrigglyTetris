@@ -44,7 +44,7 @@ sudo apt-get install libncurses5-dev
 - [x] Set Block quick drop
 - [x] Block Preview Block exchange
 - [x] Rotation Collision Checking
-- [ ] Check For Game Over
+- [x] Check For Game Over
 - [ ] Better Collision for moves similar to rotation check
 - [ ] Better Spawn point
 - [ ] Cleanup Right Side Bar areas
@@ -54,3 +54,8 @@ sudo apt-get install libncurses5-dev
 - [ ] Alternate Key Bindings
 - [ ] Show Key Bindings
 - [ ] High Score Persistence
+### Known Bugs
+- [ ] Left Right under sus circumstances will trip
+- [ ] Block swapping isn't maintaining proper position 
+- [ ] When coming into contact with the board at the bottom can't move blocks left and right
+
