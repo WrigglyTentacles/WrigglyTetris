@@ -56,6 +56,6 @@ sudo apt-get install libncurses5-dev
 - [ ] High Score Persistence
 ### Known Bugs
 - [ ] Left Right under sus circumstances will trip
-- [ ] Block swapping isn't maintaining proper position 
+- [x] Block swapping isn't maintaining proper position 
 - [ ] When coming into contact with the board at the bottom can't move blocks left and right
 

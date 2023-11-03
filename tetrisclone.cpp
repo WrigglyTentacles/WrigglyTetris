@@ -70,6 +70,7 @@ void GameLoop() {
 
     board.spawnX = windowX - 1;
     board.spawnY = windowY;
+    pair<int, int> nextBlockCoord{3, 3};
 
     // Create a new Tetromino
     // Tetromino tetromino('L', 4, windowX / 2);
@@ -167,10 +168,16 @@ void GameLoop() {
         case ' ': // Swap with nextBlock
             tetromino.UnShow(*window);
             next_tetromino.UnShow(*highscore);
+            if (next_tetromino.ExchangeWillBeOutOfBounds(tetromino.GetXY(),
+                                                         board)) {
+                continue; // Skip the command
+            }
+
             Tetromino temp = tetromino;
             tetromino = next_tetromino;
             next_tetromino = temp;
             tetromino.SetXY(temp.GetXY());
+            next_tetromino.SetXY(nextBlockCoord);
             continue;
         }
 
@@ -184,27 +191,26 @@ void GameLoop() {
             for (int line = 1; line < board.height; line++) {
                 if (board.IsLineCompleted(line)) {
                     board.ClearLine(line);
-                     //board.DropBlocks(line, window);//WrigglyMode
+                    // board.DropBlocks(line, window);//WrigglyMode
                     board.ClearBlocks(line, window); // TetrisMode
                     board.highScore++;
                 }
             }
 
-            // Create a new Tetromino
-
+            // Swap Tetromino with next up
             next_tetromino.UnShow(*highscore);
             refresh();
             wrefresh(highscore);
             tetromino = next_tetromino;
             next_tetromino = Tetromino(windowX / 2, 4);
         }
-		if(board.IsGameOver(tetromino.GetXY())){
+        if (board.IsGameOver(tetromino.GetXY())) {
             delwin(window);
             delwin(highscore);
             delwin(nextblock);
             endwin();
             return;
-		}
+        }
 
         // Wait for a short period of time before the next frame
         usleep(1000);
