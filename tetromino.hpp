@@ -1,10 +1,11 @@
 #pragma once
-#include "board.hpp"
-#include "shape.hpp"
 #include <cstdlib>
 
+#include "board.hpp"
+#include "shape.hpp"
+
 class Tetromino {
-  public:
+   public:
     Tetromino(char c, int spawnx, int spawny) {
         this->x = spawnx;
         this->y = spawny;
@@ -18,27 +19,27 @@ class Tetromino {
         rVal %= shape.shapeCount;
         char c = 'L';
         switch (rVal) {
-        case 0:
-            c = 'L';
-            break;
-        case 1:
-            c = 'J';
-            break;
-        case 2:
-            c = 'S';
-            break;
-        case 3:
-            c = 'Z';
-            break;
-        case 4:
-            c = 'T';
-            break;
-        case 5:
-            c = 'I';
-            break;
-        case 6:
-            c = 'O';
-            break;
+            case 0:
+                c = 'L';
+                break;
+            case 1:
+                c = 'J';
+                break;
+            case 2:
+                c = 'S';
+                break;
+            case 3:
+                c = 'Z';
+                break;
+            case 4:
+                c = 'T';
+                break;
+            case 5:
+                c = 'I';
+                break;
+            case 6:
+                c = 'O';
+                break;
         }
         this->shape = Shape(c);
     }
@@ -84,19 +85,19 @@ class Tetromino {
     }
 
     bool IsGoingToCollideWithBoard(
-        Board &board) { // Alternate version that is used for auto dropping. The
-                        // original function moves y down a row that would put
-                        // our collision out of bounds.
+        Board &board) {  // Alternate version that is used for auto dropping.
+                         // The original function moves y down a row that would
+                         // put our collision out of bounds.
         auto blockVector = this->shape.getBlockLocation();
         for (auto [blockx, blocky] :
-             blockVector) { // If The collision would be with the board
+             blockVector) {  // If The collision would be with the board
             if (this->y + blocky == board.height - 1 &&
                 !board.IsBlockFilled(this->x + blockx, board.height - 1)) {
                 return true;
-            } else if (board.IsBlockFilled(this->x +
-                                               blockx, // if the collision would
-                                                       // be with another block
-                                           this->y + blocky)) {
+            } else if (board.IsBlockFilled(
+                           this->x + blockx,  // if the collision would
+                                              // be with another block
+                           this->y + blocky)) {
                 return true;
             }
         }
@@ -105,14 +106,14 @@ class Tetromino {
     bool IsCollidingWithBoard(Board &board) {
         auto blockVector = this->shape.getBlockLocation();
         for (auto [blockx, blocky] :
-             blockVector) { // If The collision would be with the board
+             blockVector) {  // If The collision would be with the board
             if (this->y + blocky == board.height - 1 &&
                 !board.IsBlockFilled(this->x + blockx, board.height - 1)) {
                 this->y += 1;
                 return true;
             } else if (board.IsBlockFilled(
-                           this->x +
-                               blockx, // if the collision is with another block
+                           this->x + blockx,  // if the collision is with
+                                              // another block
                            this->y + blocky)) {
                 return true;
             }
@@ -163,7 +164,7 @@ class Tetromino {
     Shape shape = Shape('L');
     int rotation;
 
-  private:
+   private:
     int x;
     int y;
 };

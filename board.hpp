@@ -1,13 +1,14 @@
 #pragma once
 #include <ncurses.h>
 #include <unistd.h>
+
 #include <vector>
 
 using std::vector, std::pair;
 
 // Class to represent the game board
 class Board {
-  public:
+   public:
     int start_height = 1;
     int height;
     int start_width = 1;
@@ -26,12 +27,12 @@ class Board {
 
     void SetBlock(int x, int y, bool filled) { this->blocks[y][x] = filled; }
 
-    bool IsGameOver(pair<int,int> xy) { 
-		if(IsBlockFilled(xy.first, xy.second)){
-			return true;
-		}
-		return false;
-	}
+    bool IsGameOver(pair<int, int> xy) {
+        if (IsBlockFilled(xy.first, xy.second)) {
+            return true;
+        }
+        return false;
+    }
 
     bool IsBlockFilled(int x, int y) { return blocks[y][x]; }
     bool ExpensiveIsBlockFilled(int x, int y) {
@@ -62,14 +63,14 @@ class Board {
      * reache the board.
      */
     void DropBlocks(int line, WINDOW *window) {
-        for (int col = line; col > 1; col--) { // Starting at the cleared line
+        for (int col = line; col > 1; col--) {  // Starting at the cleared line
             for (int block = 0; block <= width;
-                 block++) { // Look at each block in the line
+                 block++) {  // Look at each block in the line
                 if (col + 1 < height && blocks[col][block] &&
                     !blocks[col + 1]
-                           [block]) { // if we can check the next column and
-                                      // the current block is filled but the
-                                      // block one column down isn't
+                           [block]) {  // if we can check the next column and
+                                       // the current block is filled but the
+                                       // block one column down isn't
                     int detachedCol = col;
                     while (detachedCol + 1 < height &&
                            blocks[detachedCol][block] &&
@@ -88,14 +89,14 @@ class Board {
     }
 
     void ClearBlocks(int line, WINDOW *window) {
-        for (int col = line; col > 1; col--) { // Starting at the cleared line
+        for (int col = line; col > 1; col--) {  // Starting at the cleared line
             for (int block = 0; block <= width;
-                 block++) { // Look at each block in the line
+                 block++) {  // Look at each block in the line
                 if (col + 1 < height && blocks[col][block] &&
                     !blocks[col + 1]
-                           [block]) { // if we can check the next column and
-                                      // the current block is filled but the
-                                      // block one column down isn't
+                           [block]) {  // if we can check the next column and
+                                       // the current block is filled but the
+                                       // block one column down isn't
                     blocks[col + 1][block] = true;
                     blocks[col][block] = false;
                     usleep(100000);

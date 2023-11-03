@@ -4,42 +4,42 @@ using std::vector, std::pair;
 
 // Tetromino shape definitions
 class Shape {
-  public:
+   public:
     pair<int, int> pivot = {0, 0};
     Shape(char predefinedShape) {
         switch (predefinedShape) {
-        case 'L':
-            this->type = 'L';
-            this->blocks_used = {pivot, {0, -1}, {0, -2}, {1, 0}};
-            break;
-        case 'J':
-            this->type = 'J';
-            this->blocks_used = {pivot, {-1, 0}, {0, -1}, {0, -2}};
-            break;
-        case 'T':
-            this->type = 'T';
-            this->blocks_used = {pivot, {-1, 0}, {1, 0}, {0, 1}};
-            break;
-        case 'S':
-            this->type = 'S';
-            this->blocks_used = {pivot, {-1, 0}, {0, -1}, {1, -1}};
-            break;
-        case 'Z':
-            this->type = 'Z';
-            this->blocks_used = {pivot, {-1, -1}, {0, -1}, {0, 1}};
-            break;
-        case 'I':
-            this->type = 'I';
-            this->blocks_used = {pivot, {0, 1}, {0, 2}, {0, 3}};
-            break;
-        case 'O':
-            this->type = 'O';
-            this->blocks_used = {pivot, {0, 1}, {1, 0}, {1, 1}};
-            break;
+            case 'L':
+                this->type = 'L';
+                this->blocks_used = {pivot, {0, -1}, {0, -2}, {1, 0}};
+                break;
+            case 'J':
+                this->type = 'J';
+                this->blocks_used = {pivot, {-1, 0}, {0, -1}, {0, -2}};
+                break;
+            case 'T':
+                this->type = 'T';
+                this->blocks_used = {pivot, {-1, 0}, {1, 0}, {0, 1}};
+                break;
+            case 'S':
+                this->type = 'S';
+                this->blocks_used = {pivot, {-1, 0}, {0, -1}, {1, -1}};
+                break;
+            case 'Z':
+                this->type = 'Z';
+                this->blocks_used = {pivot, {-1, -1}, {0, -1}, {0, 1}};
+                break;
+            case 'I':
+                this->type = 'I';
+                this->blocks_used = {pivot, {0, 1}, {0, 2}, {0, 3}};
+                break;
+            case 'O':
+                this->type = 'O';
+                this->blocks_used = {pivot, {0, 1}, {1, 0}, {1, 1}};
+                break;
         }
     };
-    int shapeCount = 7; // used for other classes to know the total number of
-                        // diff shapes when calcing random shapes
+    int shapeCount = 7;  // used for other classes to know the total number of
+                         // diff shapes when calcing random shapes
     char getType() { return this->type; }
     void rotateShape() {
         vector<pair<int, int>> nXY;
@@ -83,7 +83,7 @@ class Shape {
         this->blocks_used = nBlocks;
     }
 
-  private:
+   private:
     char type;
     vector<pair<int, int>> blocks_used;
 };
