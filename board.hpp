@@ -77,7 +77,7 @@ class Board {
                         blocks[detachedCol + 1][block] = true;
                         blocks[detachedCol][block] = false;
                         detachedCol++;
-                        usleep(100000);
+                        usleep(10000);
                         DrawBoard(window);
                         refresh();
                         wrefresh(window);

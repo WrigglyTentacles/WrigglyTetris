@@ -70,6 +70,7 @@ void GameLoop() {
 
     board.spawnX = windowX - 1;
     board.spawnY = windowY;
+	pair<int,int> nextBlockCoord{3,3};
 
     // Create a new Tetromino
     // Tetromino tetromino('L', 4, windowX / 2);
@@ -171,6 +172,7 @@ void GameLoop() {
             tetromino = next_tetromino;
             next_tetromino = temp;
             tetromino.SetXY(temp.GetXY());
+			next_tetromino.SetXY(nextBlockCoord);
             continue;
         }
 
@@ -190,8 +192,7 @@ void GameLoop() {
                 }
             }
 
-            // Create a new Tetromino
-
+            // Swap Tetromino with next up
             next_tetromino.UnShow(*highscore);
             refresh();
             wrefresh(highscore);
