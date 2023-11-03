@@ -63,6 +63,20 @@ class Tetromino {
     int GetLeftBoundary() { return this->x + this->shape.getLeftBlock(); }
 
     /*
+     * @Returns: Bool
+     * @Takes: Pivot Point
+     * @ExtraNotes:
+     */
+    bool ExchangeWillBeOutOfBounds(pair<int, int> newPivot, Board &board) {
+        for (auto [blockx, blocky] : this->shape.getBlockLocation()) {
+			if(board.ExpensiveIsBlockFilled(newPivot.first + blockx,  newPivot.second + blocky)){
+				return true;
+			}
+        }
+		return false;
+    }
+
+    /*
      * @Returns: Boolean
      * @Takes: void
      * @ExtraNotes: Should tell us whether a rotation will cause a collision
