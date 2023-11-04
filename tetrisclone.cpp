@@ -10,6 +10,7 @@
 
 using namespace std;
 
+int bonus(){return 1;};
 int ColorBlock(char c) {
     switch (c) {
     case 'L':
