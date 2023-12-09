@@ -23,9 +23,9 @@ int ColorBlock(char c) {
     case 'T':
         return 6;
     case 'O':
-        return 7;
+        return 7; // TODO Fix. These should be different
     case 'I':
-        return 7;
+        return 7; // TODO Fix. These should be different
     }
     return 1;
 }
@@ -134,26 +134,30 @@ void GameLoop() {
 
         // Update the game state based on user input
         switch (ch) {
-        case 'h': // move left one
+        case 'h':
+        case 'a': // move left one
             if (tetromino.GetLeftBoundary() > 1 &&
                 !board.IsBlockFilled(tetromino.GetLeftBoundary() - 1,
                                      tetrominoy)) {
                 tetromino.MoveLeft();
             }
             break;
-        case 'l': // Move right one
+        case 'l':
+        case 'd': // Move right one
             if (tetromino.GetRightBoundary() < windowX - 1 &&
                 !board.IsBlockFilled(tetromino.GetRightBoundary(),
                                      tetrominoy)) {
                 tetromino.MoveRight();
             }
             break;
-        case 'j': // MoveDown one
+        case 'j':
+        case 's': // MoveDown one
             if (tetrominox < windowY - 1) {
                 tetromino.MoveDown();
             }
             break;
-        case 'k': // Rotate
+        case 'k':
+        case 'w': // Rotate
             tetromino.RotateIfNoCollision(board);
             break;
         case 'i': // QuickPlace
